@@ -293,12 +293,22 @@ void define_label(char *label, int32_t segment, int64_t offset, char *special,
     if (!lptr)
         return;
     if (lptr->defn.is_global & DEFINED_BIT) {
-        nasm_error(ERR_NONFATAL, "symbol `%s' redefined", label);
-        return;
+        if (lptr->defn.is_global & EXTERN_BIT)
+        {
+            /* if defined as extern, redefine symbol as global. */
+            /* say hello to header files like in C ! */
+            lptr->defn.is_global |= GLOBAL_BIT;
+        }
+        else
+        {
+            nasm_error(ERR_NONFATAL, "symbol `%s' redefined", label);
+            return;
+        }
+    } else {
+        lptr->defn.is_global |= DEFINED_BIT;
+        if (isextrn)
+            lptr->defn.is_global |= EXTERN_BIT;
     }
-    lptr->defn.is_global |= DEFINED_BIT;
-    if (isextrn)
-        lptr->defn.is_global |= EXTERN_BIT;
 
     if (!islocalchar(label[0]) && is_norm) {
         /* not local, but not special either */
