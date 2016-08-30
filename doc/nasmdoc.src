@@ -1368,7 +1368,7 @@ times. This is partly present as NASM's equivalent of the \i\c{DUP}
 syntax supported by \i{MASM}-compatible assemblers, in that you can
 code
 
-\c zerobuf:        times 64 db 0
+\c zerobuf:        db 64 dup(0)
 
 or similar things; but \c{TIMES} is more versatile than that. The
 argument to \c{TIMES} is not just a numeric constant, but a numeric
